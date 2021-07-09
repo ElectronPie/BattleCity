@@ -97,12 +97,14 @@ int main(int argc, char **argv)
 
     {
         ResourceManager resourceManager(argv[0]);
-        auto pDefaultShaderProgram = resourceManager.loadShaders("DefaultShaders", "res/shaders/vertex.txt", "res/shaders/fragment.txt");
+        auto pDefaultShaderProgram = resourceManager.loadShaders("DefaultShaders", "res/shaders/vertex.vert", "res/shaders/fragment.frag");
         if(!pDefaultShaderProgram)
         {
             std::cerr << "Can't create shader program: " << "DefaultShaders" << std::endl;
             return -1;
         }
+
+        resourceManager.loadTexture("DefaultTexture", "res/textures/map_16x16.png");
 
         std::string vertexShader(vertex_shader);
         std::string fragmentShader(fragment_shader);
