@@ -2,11 +2,11 @@
 #include "../Renderer/ShaderProgram.h"
 #include "../Renderer/Texture2D.h"
 #include "../Renderer/Sprite.h"
+#include "../Renderer/AnimatedSprite.h"
 
 #include <sstream>
 #include <fstream>
 #include <iostream>
-#include <ostream>
 
 #define STB_IMAGE_IMPLEMENTATION
 #define STBI_ONLY_PNG
@@ -143,6 +143,47 @@ std::shared_ptr<Renderer::Sprite> ResourceManager::getSprite(const std::string &
         return it->second;
     }
     std::cerr << "Can't find sprite: " << spriteName << std::endl;
+    return nullptr;
+}
+
+std::shared_ptr<Renderer::AnimatedSprite> ResourceManager::loadAnimatedSprite(const std::string &spriteName,
+                                                                              const std::string &textureName,
+                                                                              const std::string &shaderName,
+                                                                              const unsigned int spriteWidth,
+                                                                              const unsigned int spriteHeight,
+                                                                              const std::string &subTextureName)
+{
+    auto pTexture = getTexture(textureName);
+    if(!pTexture)
+    {
+        std::cerr << "Can't find texture: " << textureName << " for animated sprite: " << spriteName << std::endl;
+        return nullptr;
+    }
+
+    auto pShader = getShaderProgram(shaderName);
+    if(!pShader)
+    {
+        std::cerr << "Can't find shader program: " << shaderName << " for animated sprite: " << spriteName << std::endl;
+        return nullptr;
+    }
+
+    std::shared_ptr<Renderer::AnimatedSprite> newSprite = m_animatedSprites.emplace(spriteName, std::make_shared<Renderer::AnimatedSprite>(pTexture,
+                                                                                                                                           subTextureName,
+                                                                                                                                           pShader,
+                                                                                                                                           glm::vec2(0.f, 0.f),
+                                                                                                                                           glm::vec2(spriteWidth, spriteHeight))).first->second;
+
+    return newSprite;
+}
+
+std::shared_ptr<Renderer::AnimatedSprite> ResourceManager::getAnimatedSprite(const std::string &spriteName)
+{
+    AnimatedSpritesMap::const_iterator it = m_animatedSprites.find(spriteName);
+    if(it != m_animatedSprites.end())
+    {
+        return it->second;
+    }
+    std::cerr << "Can't find animated sprite: " << spriteName << std::endl;
     return nullptr;
 }
 
