@@ -1,5 +1,7 @@
 #include "Texture2D.h"
 
+//#include <iostream>
+
 namespace Renderer
 {
     Texture2D::Texture2D(const GLuint width, const GLuint height,
@@ -34,11 +36,15 @@ namespace Renderer
         glGenerateMipmap(GL_TEXTURE_2D);
 
         glBindTexture(GL_TEXTURE_2D, 0);
+
+        //std::cout << "Texture constructor" << std::endl;
     }
 
     Texture2D::~Texture2D()
     {
         glDeleteTextures(1, &m_ID);
+
+        //std::cout << "Texture destructor" << std::endl;
     }
 
     Texture2D::Texture2D(Texture2D &&texture2d)

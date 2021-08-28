@@ -43,6 +43,8 @@ namespace Renderer
 
         glDeleteShader(vertexShaderID);
         glDeleteShader(fragmentShaderID);
+
+        //std::cout << "Shader program constructor" << std::endl;
     }
 
     bool ShaderProgram::createShader(const std::string &source, const GLenum shaderType, GLuint &shaderID)
@@ -67,6 +69,8 @@ namespace Renderer
     ShaderProgram::~ShaderProgram()
     {
         glDeleteProgram(m_ID);
+
+        //std::cout << "Shader program destructor" << std::endl;
     }
 
     void ShaderProgram::use() const

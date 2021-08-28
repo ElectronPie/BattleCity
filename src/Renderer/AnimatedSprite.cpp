@@ -18,8 +18,12 @@ namespace Renderer
              size,
              rotation)
     {
+        m_pCurrentAnimationDurations = m_statesMap.begin();
 
+        //std::cout << "Animated sprite constructor" << std::endl;
     }
+
+    //AnimatedSprite::~AnimatedSprite() { std::cout << "Animated sprite destructor" << std::endl; }
 
     void AnimatedSprite::insertState(std::string state, std::vector<std::pair<std::string, uint64_t>> subTexturesDuration)
     {

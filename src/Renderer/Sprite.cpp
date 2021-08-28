@@ -3,6 +3,8 @@
 #include "ShaderProgram.h"
 #include "Texture2D.h"
 
+//#include <iostream>
+
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -68,6 +70,8 @@ namespace Renderer
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
+
+        //std::cout << "Sprite constructor" << std::endl;
     }
 
     Sprite::~Sprite()
@@ -75,6 +79,8 @@ namespace Renderer
         glDeleteBuffers(1, &m_vertexCoordsVBO);
         glDeleteBuffers(1, &m_textureCoordsVBO);
         glDeleteVertexArrays(1, &m_VAO);
+
+        //std::cout << "Sprite destructor" << std::endl;
     }
 
     void Sprite::render() const
