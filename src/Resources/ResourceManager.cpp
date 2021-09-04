@@ -92,7 +92,7 @@ std::shared_ptr<Renderer::Texture2D> ResourceManager::loadTexture(const std::str
     int height = 0;
 
     stbi_set_flip_vertically_on_load(true);
-    unsigned char *pixels = stbi_load(std::string(m_path + "/" + texturePath).c_str(), &width, &height, &channels, 0);
+    unsigned char *pixels = stbi_load(std::string(m_path + "/" + texturePath).c_str(), &width, &height, &channels, 4);
     if(!pixels)
     {
         std::cerr << "Can't load image: " << textureName << std::endl;

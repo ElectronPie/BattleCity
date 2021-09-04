@@ -102,6 +102,6 @@ int main(int argc, char **argv)
         ResourceManager::unloadAllResources();
     }
 
-    glfwTerminate();
+    //glfwTerminate();
     return 0;
 }   

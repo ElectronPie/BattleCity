@@ -1,5 +1,7 @@
 #include "IndexBuffer.h"
 
+//#include <iostream>
+
 namespace Renderer
 {
     IndexBuffer::IndexBuffer()
@@ -8,6 +10,8 @@ namespace Renderer
 
     IndexBuffer::~IndexBuffer()
     {
+        //std::cout << "Deleting IBO " << m_id <<std::endl;
+
         glDeleteBuffers(1, &m_id);
     }
 
@@ -16,6 +20,8 @@ namespace Renderer
         glGenBuffers(1, &m_id);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_id);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
+
+        //std::cout << "Created IBO " << m_id << std::endl;
     }
 
     IndexBuffer::IndexBuffer(IndexBuffer&& indexBuffer) noexcept
