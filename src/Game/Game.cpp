@@ -196,7 +196,10 @@ bool Game::init()
     pTankAnimatedSprite->insertState("tankLeftState", std::move(tankLeftState));
     pTankAnimatedSprite->insertState("tankRightState", std::move(tankRightState));
 
+    pTankAnimatedSprite->setState("tankTopState");
+
     m_tank = std::make_unique<Tank>(pTankAnimatedSprite, 1e-7, glm::vec2(100.f, 100.f));
+    m_tank->setOrientation(Tank::EOrientation::Top);
 
     return true;
 }
