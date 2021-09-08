@@ -1,6 +1,6 @@
 #include "VertexArray.h"
 
-namespace Renderer
+namespace RenderEngine
 {
     VertexArray::VertexArray()
     : m_id(0)
@@ -17,13 +17,17 @@ namespace Renderer
     VertexArray::VertexArray(VertexArray&& vertexArray) noexcept
     {
         m_id = vertexArray.m_id;
+        m_elementsCount = vertexArray.m_elementsCount;
         vertexArray.m_id = 0;
+        vertexArray.m_elementsCount = 0;
     }
 
     VertexArray& VertexArray::operator=(VertexArray&& vertexArray) noexcept
     {
         m_id = vertexArray.m_id;
+        m_elementsCount = vertexArray.m_elementsCount;
         vertexArray.m_id = 0;
+        vertexArray.m_elementsCount = 0;
         return *this;
     }
 

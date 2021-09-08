@@ -4,7 +4,7 @@
 #include <glm/mat4x4.hpp>
 #include <string>
 
-namespace Renderer
+namespace RenderEngine
 {
     class ShaderProgram
     {

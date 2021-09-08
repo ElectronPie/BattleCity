@@ -2,13 +2,14 @@
 
 #include "ShaderProgram.h"
 #include "Texture2D.h"
+#include "Renderer.h"
 
 //#include <iostream>
 
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-namespace Renderer
+namespace RenderEngine
 {
     Sprite::Sprite(const std::shared_ptr<Texture2D> pTexture,
                    const std::string initialSubTexture,
@@ -64,7 +65,7 @@ namespace Renderer
         textureCoordsLayout.addElementLayoutFloat(2, false);
         m_vertexArray.addBuffer(m_textureCoordsBuffer, textureCoordsLayout);
 
-        m_indexBuffer.init(indices, 6 * sizeof(GLuint));
+        m_indexBuffer.init(indices, 6);
 
         m_vertexArray.unbind();
         m_indexBuffer.unbind();
@@ -95,8 +96,7 @@ namespace Renderer
         glActiveTexture(GL_TEXTURE0);
         m_pTexture->bind();
 
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
-        m_vertexArray.unbind();
+        Renderer::draw(m_vertexArray, m_indexBuffer, *m_pShaderProgram);
     }
 
     void Sprite::setPosition(const glm::vec2 &position)
