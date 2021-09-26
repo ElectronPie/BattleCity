@@ -11,6 +11,7 @@ namespace RenderEngine
                   const GLenum wrapMode)
     :m_width(width)
     ,m_height(height)
+    ,m_channels(channels)
     {
         switch(channels)
         {

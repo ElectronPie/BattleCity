@@ -11,7 +11,7 @@
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "Tank.h"
+#include "GameObjects/Tank.h"
 
 #include "../Renderer/ShaderProgram.h"
 #include "../Renderer/Texture2D.h"
@@ -35,47 +35,54 @@ Game::~Game()
 
 void Game::render()
 {
-    m_tank->render();
+    if(m_pLevel)
+    {
+        m_pLevel->render();
+    }
+
+    m_pTank->render();
 }
 
 void Game::update(const uint64_t delta)
 {
     if(m_keys[GLFW_KEY_W])
     {
-        m_tank->setOrientation(Tank::EOrientation::Top);
-        m_tank->move(true);
+        m_pTank->setOrientation(Tank::EOrientation::Top);
+        m_pTank->move(true);
     }
     else if(m_keys[GLFW_KEY_A])
     {
-        m_tank->setOrientation(Tank::EOrientation::Left);
-        m_tank->move(true);
+        m_pTank->setOrientation(Tank::EOrientation::Left);
+        m_pTank->move(true);
     }
     else if(m_keys[GLFW_KEY_S])
     {
-        m_tank->setOrientation(Tank::EOrientation::Bottom);
-        m_tank->move(true);
+        m_pTank->setOrientation(Tank::EOrientation::Bottom);
+        m_pTank->move(true);
     }
     else if(m_keys[GLFW_KEY_D])
     {
-        m_tank->setOrientation(Tank::EOrientation::Right);
-        m_tank->move(true);
+        m_pTank->setOrientation(Tank::EOrientation::Right);
+        m_pTank->move(true);
     }
     else
     {
-        m_tank->move(false);
+        m_pTank->move(false);
     }
 
-    m_tank->update(delta);
+    m_pTank->update(delta);
+
+    m_pLevel->update(delta);
 }
 
 bool Game::init()
 {
     ResourceManager::loadJSONResources("res/resources.json");
 
-    auto pSpriteShaderProgram = ResourceManager::getShaderProgram("spriteShaders");
+    auto pSpriteShaderProgram = ResourceManager::getShaderProgram("spriteShader");
     if (!pSpriteShaderProgram)
     {
-        std::cerr << "Can't find shader program: " << "spriteShaders" << std::endl;
+        std::cerr << "Can't find shader program: " << "spriteShader" << std::endl;
         return false;
     }
 
@@ -107,8 +114,10 @@ bool Game::init()
 
     pTankAnimatedSprite->setState("tankTopState");
 
-    m_tank = std::make_unique<Tank>(pTankAnimatedSprite, 1e-7, glm::vec2(100.f, 100.f));
-    m_tank->setOrientation(Tank::EOrientation::Top);
+    m_pTank = std::make_unique<Tank>(pTankAnimatedSprite, 0.000000016, glm::vec2(0), glm::vec2(16.f, 16.f));
+    m_pTank->setOrientation(Tank::EOrientation::Top);
+
+    m_pLevel = std::make_unique<Level>(ResourceManager::getLevels()[0]);
 
     return true;
 }
