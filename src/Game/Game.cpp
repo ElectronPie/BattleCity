@@ -114,7 +114,7 @@ bool Game::init()
 
     pTankAnimatedSprite->setState("tankTopState");
 
-    m_pTank = std::make_unique<Tank>(pTankAnimatedSprite, 0.000000016, glm::vec2(0), glm::vec2(16.f, 16.f));
+    m_pTank = std::make_unique<Tank>(pTankAnimatedSprite, 0.000000064, glm::vec2(0), glm::vec2(16.f, 16.f));
     m_pTank->setOrientation(Tank::EOrientation::Top);
 
     m_pLevel = std::make_unique<Level>(ResourceManager::getLevels()[0]);
