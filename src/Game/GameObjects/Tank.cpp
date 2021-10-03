@@ -1,15 +1,25 @@
 #include "Tank.h"
 
 #include <iostream>
-#include "../../Renderer/AnimatedSprite.h"
+#include "../../Renderer/Sprite.h"
 
-Tank::Tank(std::shared_ptr<RenderEngine::AnimatedSprite> pSprite,
-     const float velocity,
-     const glm::vec2 &position,
-     const glm::vec2 &size)
+Tank::Tank(std::shared_ptr<RenderEngine::Sprite> pSprite_top,
+           std::shared_ptr<RenderEngine::Sprite> pSprite_bottom,
+           std::shared_ptr<RenderEngine::Sprite> pSprite_left,
+           std::shared_ptr<RenderEngine::Sprite> pSprite_right,
+           const float velocity,
+           const glm::vec2 &position,
+           const glm::vec2 &size)
 : IGameObject(position, size, 0.f)
 , m_eOrientation(EOrientation::Other)
-, m_pSprite(std::move(pSprite))
+, m_pSprite_top(std::move(pSprite_top))
+, m_pSprite_bottom(std::move(pSprite_bottom))
+, m_pSprite_left(std::move(pSprite_left))
+, m_pSprite_right(std::move(pSprite_right))
+, m_spriteAnimator_top(m_pSprite_top)
+, m_spriteAnimator_bottom(m_pSprite_bottom)
+, m_spriteAnimator_left(m_pSprite_left)
+, m_spriteAnimator_right(m_pSprite_right)
 , m_move(false)
 , m_velocity(velocity)
 {
@@ -17,7 +27,21 @@ Tank::Tank(std::shared_ptr<RenderEngine::AnimatedSprite> pSprite,
 
 void Tank::render() const
 {
-     m_pSprite->render(m_position, m_size, m_rotation);
+     switch (m_eOrientation)
+     {
+     case EOrientation::Bottom:
+          m_pSprite_bottom->render(m_position, m_size, m_rotation, m_spriteAnimator_bottom.getCurrentFrame());
+          break;
+     case EOrientation::Left:
+          m_pSprite_left->render(m_position, m_size, m_rotation, m_spriteAnimator_left.getCurrentFrame());
+          break;
+     case EOrientation::Right:
+          m_pSprite_right->render(m_position, m_size, m_rotation, m_spriteAnimator_right.getCurrentFrame());
+          break;
+     default:
+          m_pSprite_top->render(m_position, m_size, m_rotation, m_spriteAnimator_top.getCurrentFrame());
+          break;
+     }
 }
 
 void Tank::setOrientation(const EOrientation eOrientation)
@@ -28,22 +52,18 @@ void Tank::setOrientation(const EOrientation eOrientation)
      switch (m_eOrientation)
      {
      case EOrientation::Top:
-          m_pSprite->setState("tankTopState");
           m_moveOffset.x = 0.f;
           m_moveOffset.y = 1.f;
           break;
      case EOrientation::Bottom:
-          m_pSprite->setState("tankBottomState");
           m_moveOffset.x = 0.f;
           m_moveOffset.y = -1.f;
           break;
      case EOrientation::Left:
-          m_pSprite->setState("tankLeftState");
           m_moveOffset.x = -1.f;
           m_moveOffset.y = 0.f;
           break;
      case EOrientation::Right:
-          m_pSprite->setState("tankRightState");
           m_moveOffset.x = 1.f;
           m_moveOffset.y = 0.f;
           break;
@@ -63,6 +83,20 @@ void Tank::update(const uint64_t delta)
      if (m_move)
      {
           m_position += delta * m_velocity * m_moveOffset;
-          m_pSprite->update(delta);
+          switch (m_eOrientation)
+          {
+          case EOrientation::Bottom:
+               m_spriteAnimator_bottom.update(delta);
+               break;
+          case EOrientation::Left:
+               m_spriteAnimator_left.update(delta);
+               break;
+          case EOrientation::Right:
+               m_spriteAnimator_right.update(delta);
+               break;
+          default:
+               m_spriteAnimator_top.update(delta);
+               break;
+          }
      }
 }

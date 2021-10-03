@@ -41,13 +41,6 @@ public:
 
     static std::shared_ptr<RenderEngine::Sprite> getSprite(const std::string &spriteName);
 
-    static std::shared_ptr<RenderEngine::AnimatedSprite> loadAnimatedSprite(const std::string &spriteName,
-                                                                            const std::string &textureName,
-                                                                            const std::string &shaderName,
-                                                                            const std::string &subTextureName = "default");
-
-    static std::shared_ptr<RenderEngine::AnimatedSprite> getAnimatedSprite(const std::string &spriteName);
-
     static std::shared_ptr<RenderEngine::Texture2D> loadTextureAtlas(const std::string &textureName,
                                                                      const std::string &texturePath,
                                                                      const std::vector<std::string> subTextures,
@@ -69,9 +62,6 @@ private:
 
     typedef std::map<const std::string, std::shared_ptr<RenderEngine::Sprite>> SpritesMap;
     static SpritesMap m_sprites;
-
-    typedef std::map<const std::string, std::shared_ptr<RenderEngine::AnimatedSprite>> AnimatedSpritesMap;
-    static AnimatedSpritesMap m_animatedSprites;
 
     static std::vector<std::vector<std::string>> m_levels;
 
