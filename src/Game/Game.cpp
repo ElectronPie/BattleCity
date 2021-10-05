@@ -34,12 +34,15 @@ Game::~Game()
 
 void Game::render()
 {
+    if(m_pTank)
+    {
+        m_pTank->render();
+    }
+
     if(m_pLevel)
     {
         m_pLevel->render();
     }
-
-    m_pTank->render();
 }
 
 void Game::update(const uint64_t delta)
@@ -105,11 +108,7 @@ bool Game::init()
     pSpriteShaderProgram->setInt("tex", 0);
     pSpriteShaderProgram->setMatrix4("projectionMat", projectionMatrix);
 
-    m_pTank = std::make_unique<Tank>(ResourceManager::getSprite("tankSprite_top"),
-                                     ResourceManager::getSprite("tankSprite_bottom"),
-                                     ResourceManager::getSprite("tankSprite_left"),
-                                     ResourceManager::getSprite("tankSprite_right"),
-                                     0.000000064, glm::vec2(0), glm::vec2(16.f, 16.f));
+    m_pTank = std::make_unique<Tank>(0.000000064, glm::vec2(0), glm::vec2(16.f, 16.f));
     m_pTank->setOrientation(Tank::EOrientation::Top);
 
     m_pLevel = std::make_unique<Level>(ResourceManager::getLevels()[0]);
