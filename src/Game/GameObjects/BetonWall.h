@@ -16,7 +16,7 @@ class BetonWall : public IGameObject
 {
 public:
 
-    enum class EBetonWallType
+    enum class EBetonWallType : uint8_t
     {
         All,
         Top,
@@ -29,7 +29,7 @@ public:
         BottomRight
     };
 
-    enum class EBlockLocation
+    enum class EBlockLocation : uint8_t
     {
         TopLeft,
         TopRight,

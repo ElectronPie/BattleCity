@@ -88,12 +88,6 @@ bool Game::init()
         return false;
     }
 
-    auto pMapTextureAtlas = ResourceManager::getTexture("mapTextureAtlas");
-    if (!pMapTextureAtlas)
-    {
-        std::cerr << "Can't find texture atlas: " << "mapTextureAtlas" << std::endl;
-    }
-
     auto pTanksTextureAtlas = ResourceManager::getTexture("tanksTextureAtlas");
     if (!pTanksTextureAtlas)
     {
@@ -111,7 +105,7 @@ bool Game::init()
     m_pTank = std::make_unique<Tank>(0.000000064, glm::vec2(0), glm::vec2(16.f, 16.f));
     m_pTank->setOrientation(Tank::EOrientation::Top);
 
-    m_pLevel = std::make_unique<Level>(ResourceManager::getLevels()[0]);
+    m_pLevel = std::make_unique<Level>(ResourceManager::getLevels()[1]);
 
     return true;
 }
