@@ -5,8 +5,9 @@
 
 Trees::Trees(const glm::vec2& position,
              const glm::vec2& size,
-             const float rotation)
-: IGameObject(position, size, rotation)
+             const float rotation,
+             const float layer)
+: IGameObject(position, size, rotation, layer)
 , m_sprite(ResourceManager::getSprite("trees"))
 , m_blockOffsets{
     glm::vec2(0            , m_size.y/2.f),
@@ -20,6 +21,6 @@ void Trees::render() const
 {
     for (int i = 0; i < 4; i++)
     {
-        m_sprite->render(m_position + m_blockOffsets[i], m_size/2.f, m_rotation);
+        m_sprite->render(m_position + m_blockOffsets[i], m_size/2.f, m_rotation, m_layer);
     }
 }

@@ -6,8 +6,9 @@
 BetonWall::BetonWall(const EBetonWallType eBetonWallType,
                      const glm::vec2& position,
                      const glm::vec2& size,
-                     const float rotation)
-: IGameObject(position, size, rotation)
+                     const float rotation,
+                     const float layer)
+: IGameObject(position, size, rotation, layer)
 , m_currentBlockState{ false,
                        false,
                        false,
@@ -62,7 +63,7 @@ void BetonWall::render() const
     {
         if (m_currentBlockState[i])
         {
-            m_sprite->render(m_position + m_blockOffsets[i], m_size/2.f, m_rotation);
+            m_sprite->render(m_position + m_blockOffsets[i], m_size/2.f, m_rotation, m_layer);
         }
     }
 }

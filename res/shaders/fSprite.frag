@@ -9,4 +9,8 @@ uniform sampler2D tex;
 void main()
 {
     frag_color = texture(tex, texCoord);
+    if(frag_color.rgb == vec3(0.))
+    {
+        discard;
+    }
 }
