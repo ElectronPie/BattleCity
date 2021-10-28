@@ -18,8 +18,7 @@ public:
         Top,
         Bottom,
         Left,
-        Right,
-        Other
+        Right
     };
 
     Tank(const float velocity,
@@ -44,6 +43,5 @@ private:
     RenderEngine::SpriteAnimator m_spriteAnimator_right;
     float m_velocity;
     bool m_move;
-    glm::vec2 m_position;
     glm::vec2 m_moveOffset;
 };

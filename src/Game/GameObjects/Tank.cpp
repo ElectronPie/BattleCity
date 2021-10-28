@@ -10,7 +10,7 @@ Tank::Tank(const float velocity,
            const glm::vec2 &size,
            const float layer)
 : IGameObject(position, size, 0.0f, layer)
-, m_eOrientation(EOrientation::Other)
+, m_eOrientation(EOrientation::Top)
 , m_pSprite_top(ResourceManager::getSprite("tankSprite_top"))
 , m_pSprite_bottom(ResourceManager::getSprite("tankSprite_bottom"))
 , m_pSprite_left(ResourceManager::getSprite("tankSprite_left"))
@@ -21,6 +21,7 @@ Tank::Tank(const float velocity,
 , m_spriteAnimator_right(m_pSprite_right)
 , m_move(false)
 , m_velocity(velocity)
+, m_moveOffset(0.f, 1.f)
 {
 }
 

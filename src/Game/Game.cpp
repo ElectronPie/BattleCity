@@ -106,7 +106,7 @@ bool Game::init()
     pSpriteShaderProgram->setInt("tex", 0);
     pSpriteShaderProgram->setMatrix4("projectionMat", projectionMatrix);
 
-    m_pTank = std::make_unique<Tank>(0.000000064, glm::vec2(16, 8), glm::vec2(16.f, 16.f), 0.f);
+    m_pTank = std::make_unique<Tank>(0.000000064, m_pLevel->getPlayerRespawn_1(), glm::vec2(Level::BLOCK_SIZE, Level::BLOCK_SIZE), 0.f);
     m_pTank->setOrientation(Tank::EOrientation::Top);
 
     return true;

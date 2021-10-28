@@ -12,7 +12,7 @@
 #include "Game/Game.h"
 #include "Renderer/Renderer.h"
 
-glm::ivec2 g_windowSize(13 * 16, 14 * 16);
+glm::ivec2 g_windowSize(256, 240);
 std::unique_ptr<Game> g_game = std::make_unique<Game>(g_windowSize);
 
 void glfwWindowSizeCallback(GLFWwindow *pwindow, int width, int height)
