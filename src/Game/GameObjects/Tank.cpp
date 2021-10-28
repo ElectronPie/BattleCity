@@ -19,14 +19,41 @@ Tank::Tank(const float velocity,
 , m_spriteAnimator_bottom(m_pSprite_bottom)
 , m_spriteAnimator_left(m_pSprite_left)
 , m_spriteAnimator_right(m_pSprite_right)
+, m_pSprite_respawn(ResourceManager::getSprite("respawn"))
+, m_pSprite_shield(ResourceManager::getSprite("shield"))
+, m_spriteAnimator_respawn(m_pSprite_respawn)
+, m_spriteAnimator_shield(m_pSprite_shield)
 , m_move(false)
 , m_velocity(velocity)
-, m_moveOffset(0.f, 1.f)
+, m_moveOffset(0., 1.)
+, m_isSpawning(true)
+, m_hasShield(false)
 {
+     m_spawnTimer.setCallback([&]()
+          {
+               m_isSpawning = false;
+               m_hasShield = true;
+               m_shieldTimer.start(2000);
+          }
+     );
+
+     m_shieldTimer.setCallback([&]()
+          {
+               m_hasShield = false;
+          }
+     );
+
+     m_spawnTimer.start(1500);
 }
 
 void Tank::render() const
 {
+     if (m_isSpawning)
+     {
+          m_pSprite_respawn->render(m_position, m_size, m_rotation, m_layer, m_spriteAnimator_respawn.getCurrentFrame());
+          return;
+     }
+
      switch (m_eOrientation)
      {
      case EOrientation::Bottom:
@@ -41,6 +68,11 @@ void Tank::render() const
      default:
           m_pSprite_top->render(m_position, m_size, m_rotation, m_layer, m_spriteAnimator_top.getCurrentFrame());
           break;
+     }
+
+     if (m_hasShield)
+     {
+          m_pSprite_shield->render(m_position, m_size, m_rotation, m_layer, m_spriteAnimator_shield.getCurrentFrame());
      }
 }
 
@@ -78,8 +110,21 @@ void Tank::move(const bool move)
      m_move = move;
 }
 
-void Tank::update(const uint64_t delta)
+void Tank::update(const double delta)
 {
+     if (m_isSpawning)
+     {
+          m_spriteAnimator_respawn.update(delta);
+          m_spawnTimer.update(delta);
+          return;
+     }
+
+     if (m_hasShield)
+     {
+          m_spriteAnimator_shield.update(delta);
+          m_shieldTimer.update(delta);
+     }
+
      if (m_move)
      {
           m_position += delta * m_velocity * m_moveOffset;

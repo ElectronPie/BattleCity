@@ -68,5 +68,5 @@ void BetonWall::render() const
     }
 }
 
-void BetonWall::update(const uint64_t delta)
+void BetonWall::update(const double delta)
 {}

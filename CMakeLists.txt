@@ -6,6 +6,9 @@ project(${PROJECT_NAME})
 add_executable(${PROJECT_NAME}
     src/main.cpp
 
+    src/System/Timer.cpp
+    src/System/Timer.h
+
     src/Renderer/Renderer.cpp
     src/Renderer/Renderer.h
     src/Renderer/ShaderProgram.cpp

@@ -26,7 +26,7 @@ void Water::render() const
     }
 }
 
-void Water::update(const uint64_t delta)
+void Water::update(const double delta)
 {
     m_spriteAnimator.update(delta);
 }

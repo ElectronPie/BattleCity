@@ -30,7 +30,7 @@ namespace RenderEngine
                 {}
                 glm::vec2 leftBottomUV;
                 glm::vec2 rightTopUV;
-                uint64_t duration;
+                double duration;
             };
 
             Sprite(const std::shared_ptr<Texture2D> pTexture,

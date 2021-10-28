@@ -45,8 +45,10 @@ void Game::render()
     }
 }
 
-void Game::update(const uint64_t delta)
+void Game::update(const double delta)
 {
+    m_pLevel->update(delta);
+
     if(m_keys[GLFW_KEY_W])
     {
         m_pTank->setOrientation(Tank::EOrientation::Top);
@@ -73,8 +75,6 @@ void Game::update(const uint64_t delta)
     }
 
     m_pTank->update(delta);
-
-    m_pLevel->update(delta);
 }
 
 bool Game::init()
@@ -94,7 +94,7 @@ bool Game::init()
         std::cerr << "Can't find texture atlas: " << "tanksTextureAtlas" << std::endl;
     }
 
-    m_pLevel = std::make_unique<Level>(ResourceManager::getLevels()[1]);
+    m_pLevel = std::make_unique<Level>(ResourceManager::getLevels()[0]);
     m_windowSize.x = static_cast<int>(m_pLevel->getLevelWidth());
     m_windowSize.y = static_cast<int>(m_pLevel->getLevelHeight());
 
@@ -106,7 +106,7 @@ bool Game::init()
     pSpriteShaderProgram->setInt("tex", 0);
     pSpriteShaderProgram->setMatrix4("projectionMat", projectionMatrix);
 
-    m_pTank = std::make_unique<Tank>(0.000000064, m_pLevel->getPlayerRespawn_1(), glm::vec2(Level::BLOCK_SIZE, Level::BLOCK_SIZE), 0.f);
+    m_pTank = std::make_unique<Tank>(0.064, m_pLevel->getPlayerRespawn_1(), glm::vec2(Level::BLOCK_SIZE, Level::BLOCK_SIZE), 0.f);
     m_pTank->setOrientation(Tank::EOrientation::Top);
 
     return true;

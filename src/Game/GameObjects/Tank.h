@@ -5,6 +5,7 @@
 
 #include "IGameObject.h"
 #include "../../Renderer/SpriteAnimator.h"
+#include "../../System/Timer.h"
 
 namespace RenderEngine
 {
@@ -29,10 +30,11 @@ public:
     void render() const override;
     void setOrientation(const EOrientation eOrientation);
     void move(const bool move);
-    void update(const uint64_t delta) override;
+    void update(const double delta) override;
 
 private:
     EOrientation m_eOrientation;
+
     std::shared_ptr<RenderEngine::Sprite> m_pSprite_top;
     std::shared_ptr<RenderEngine::Sprite> m_pSprite_bottom;
     std::shared_ptr<RenderEngine::Sprite> m_pSprite_left;
@@ -41,7 +43,18 @@ private:
     RenderEngine::SpriteAnimator m_spriteAnimator_bottom;
     RenderEngine::SpriteAnimator m_spriteAnimator_left;
     RenderEngine::SpriteAnimator m_spriteAnimator_right;
-    float m_velocity;
+
+    std::shared_ptr<RenderEngine::Sprite> m_pSprite_respawn;
+    std::shared_ptr<RenderEngine::Sprite> m_pSprite_shield;
+    RenderEngine::SpriteAnimator m_spriteAnimator_respawn;
+    RenderEngine::SpriteAnimator m_spriteAnimator_shield;
+
+    Timer m_spawnTimer;
+    Timer m_shieldTimer;
+
+    double m_velocity;
     bool m_move;
-    glm::vec2 m_moveOffset;
+    glm::dvec2 m_moveOffset;
+    bool m_isSpawning;
+    bool m_hasShield;
 };
