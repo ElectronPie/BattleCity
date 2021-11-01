@@ -32,6 +32,9 @@ add_executable(${PROJECT_NAME}
     src/Resources/ResourceManager.h
     src/Resources/stb_image.h
 
+    src/Physics/PhysicsEngine.cpp
+    src/Physics/PhysicsEngine.h
+
     src/Game/Game.cpp
     src/Game/Game.h
     src/Game/Level.cpp

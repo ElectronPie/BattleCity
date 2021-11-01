@@ -5,7 +5,7 @@
 #include "../../Resources/ResourceManager.h"
 #include "../../Renderer/Sprite.h"
 
-Tank::Tank(const float velocity,
+Tank::Tank(const double maxVelocity,
            const glm::vec2 &position,
            const glm::vec2 &size,
            const float layer)
@@ -23,9 +23,7 @@ Tank::Tank(const float velocity,
 , m_pSprite_shield(ResourceManager::getSprite("shield"))
 , m_spriteAnimator_respawn(m_pSprite_respawn)
 , m_spriteAnimator_shield(m_pSprite_shield)
-, m_move(false)
-, m_velocity(velocity)
-, m_moveOffset(0., 1.)
+, m_maxVelocity(maxVelocity)
 , m_isSpawning(true)
 , m_hasShield(false)
 {
@@ -72,8 +70,13 @@ void Tank::render() const
 
      if (m_hasShield)
      {
-          m_pSprite_shield->render(m_position, m_size, m_rotation, m_layer, m_spriteAnimator_shield.getCurrentFrame());
+          m_pSprite_shield->render(m_position, m_size, m_rotation, m_layer + 0.1f, m_spriteAnimator_shield.getCurrentFrame());
      }
+}
+
+void Tank::setVelocity(const double velocity)
+{
+     if (!m_isSpawning) m_velocity = velocity;
 }
 
 void Tank::setOrientation(const EOrientation eOrientation)
@@ -84,30 +87,25 @@ void Tank::setOrientation(const EOrientation eOrientation)
      switch (m_eOrientation)
      {
      case EOrientation::Top:
-          m_moveOffset.x = 0.f;
-          m_moveOffset.y = 1.f;
+          m_direction.x = 0.f;
+          m_direction.y = 1.f;
           break;
      case EOrientation::Bottom:
-          m_moveOffset.x = 0.f;
-          m_moveOffset.y = -1.f;
+          m_direction.x = 0.f;
+          m_direction.y = -1.f;
           break;
      case EOrientation::Left:
-          m_moveOffset.x = -1.f;
-          m_moveOffset.y = 0.f;
+          m_direction.x = -1.f;
+          m_direction.y = 0.f;
           break;
      case EOrientation::Right:
-          m_moveOffset.x = 1.f;
-          m_moveOffset.y = 0.f;
+          m_direction.x = 1.f;
+          m_direction.y = 0.f;
           break;
      default:
           std::cerr << "help" << std::endl;
           break;
      }
-}
-
-void Tank::move(const bool move)
-{
-     m_move = move;
 }
 
 void Tank::update(const double delta)
@@ -125,9 +123,8 @@ void Tank::update(const double delta)
           m_shieldTimer.update(delta);
      }
 
-     if (m_move)
+     if (m_velocity > 0)
      {
-          m_position += delta * m_velocity * m_moveOffset;
           switch (m_eOrientation)
           {
           case EOrientation::Bottom:

@@ -11,6 +11,7 @@
 #include "Resources/ResourceManager.h"
 #include "Game/Game.h"
 #include "Renderer/Renderer.h"
+#include "Physics/PhysicsEngine.h"
 
 glm::ivec2 g_windowSize(256, 240);
 std::unique_ptr<Game> g_game = std::make_unique<Game>(g_windowSize);
@@ -92,6 +93,7 @@ int main(int argc, char **argv)
 
     {
         ResourceManager::setExecutablePath(argv[0]);
+        PhysicsEngine::init();
         if(!g_game->init())
         {
             std::cerr << "Couldn't initialize game resources!" << std::endl;
@@ -110,6 +112,7 @@ int main(int argc, char **argv)
             lastTime = currentTime;
 
             g_game->update(duration);
+            PhysicsEngine::update(duration);
 
             /* Render here */
             RenderEngine::Renderer::clear();

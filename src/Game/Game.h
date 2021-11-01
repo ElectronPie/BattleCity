@@ -4,8 +4,8 @@
 #include <array>
 #include <memory>
 
-#include "Level.h"
-#include "GameObjects/Tank.h"
+class Level;
+class Tank;
 
 class Game
 {
@@ -30,6 +30,6 @@ private:
 
     glm::vec2 m_windowSize;
     EGameState m_eCurrentGameState;
-    std::unique_ptr<Tank> m_pTank;
-    std::unique_ptr<Level> m_pLevel;
+    std::shared_ptr<Tank> m_pTank;
+    std::shared_ptr<Level> m_pLevel;
 };
