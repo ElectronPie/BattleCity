@@ -97,9 +97,10 @@ bool Game::init()
         std::cerr << "Can't find texture atlas: " << "tanksTextureAtlas" << std::endl;
     }
 
-    m_pLevel = std::make_shared<Level>(ResourceManager::getLevels()[0]);
+    m_pLevel = std::make_shared<Level>(ResourceManager::getLevels()[1]);
     m_windowSize.x = static_cast<int>(m_pLevel->getLevelWidth());
     m_windowSize.y = static_cast<int>(m_pLevel->getLevelHeight());
+    Physics::PhysicsEngine::setCurrentLevel(m_pLevel);
 
     glm::mat4 projectionMatrix = glm::ortho<float>(0.f, m_windowSize.x, 0.f, m_windowSize.y, -100.f, 100.f);
 
@@ -110,7 +111,7 @@ bool Game::init()
     pSpriteShaderProgram->setMatrix4("projectionMat", projectionMatrix);
 
     m_pTank = std::make_shared<Tank>(0.064, m_pLevel->getPlayerRespawn_1(), glm::vec2(Level::BLOCK_SIZE, Level::BLOCK_SIZE), 0.f);
-    PhysicsEngine::addDynamicObject(m_pTank);
+    Physics::PhysicsEngine::addDynamicObject(m_pTank);
     m_pTank->setOrientation(Tank::EOrientation::Top);
 
     return true;

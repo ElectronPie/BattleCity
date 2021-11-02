@@ -93,7 +93,7 @@ int main(int argc, char **argv)
 
     {
         ResourceManager::setExecutablePath(argv[0]);
-        PhysicsEngine::init();
+        Physics::PhysicsEngine::init();
         if(!g_game->init())
         {
             std::cerr << "Couldn't initialize game resources!" << std::endl;
@@ -112,7 +112,7 @@ int main(int argc, char **argv)
             lastTime = currentTime;
 
             g_game->update(duration);
-            PhysicsEngine::update(duration);
+            Physics::PhysicsEngine::update(duration);
 
             /* Render here */
             RenderEngine::Renderer::clear();
