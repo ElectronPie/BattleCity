@@ -12,6 +12,7 @@ Eagle::Eagle(const glm::vec2& position,
 , m_sprites{ ResourceManager::getSprite("eagle_dead"),
              ResourceManager::getSprite("eagle") }
 {
+    m_colliders.emplace_back(glm::vec2(0), m_size);
 }
 
 void Eagle::render() const

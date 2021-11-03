@@ -28,6 +28,14 @@ namespace Physics
         {
             if (currentObject->getCurrentVelocity() > 0)
             {
+                if (currentObject->getCurrentDirection().x != 0.f)
+                {
+                    currentObject->getCurrentPosition().y = static_cast<unsigned int>(currentObject->getCurrentPosition().y / 4.f + 0.5f) * 4.f;
+                }
+                if (currentObject->getCurrentDirection().y != 0.f)
+                {
+                    currentObject->getCurrentPosition().x = static_cast<unsigned int>(currentObject->getCurrentPosition().x / 4.f + 0.5f) * 4.f;
+                }
                 const auto newPosition = currentObject->getCurrentPosition() + currentObject->getCurrentDirection() * static_cast<float>(currentObject->getCurrentVelocity() * delta);
                 const auto& colliders = currentObject->getColliders();
                 std::vector<std::shared_ptr<IGameObject>> objectsToCheck = m_pCurrentLevel->getObjectsInArea(newPosition, currentObject->getSize() + newPosition);
@@ -42,6 +50,17 @@ namespace Physics
                         if (hasIntersection(colliders, newPosition, collidersToCheck, currentObjectToCheck->getCurrentPosition()))
                         {
                             hasCollision = true;
+                        }
+                        else
+                        {
+                            if (currentObject->getCurrentDirection().x != 0.f)
+                            {
+                                currentObject->getCurrentPosition().y = static_cast<unsigned int>(currentObject->getCurrentPosition().y / 8.f + 0.5f) * 8.f;
+                            }
+                            if (currentObject->getCurrentDirection().y != 0.f)
+                            {
+                                currentObject->getCurrentPosition().x = static_cast<unsigned int>(currentObject->getCurrentPosition().x / 8.f + 0.5f) * 8.f;
+                            }
                         }
                     }
                 }
@@ -64,20 +83,30 @@ namespace Physics
     {
         for (const auto& currentCollider1 : colliders1)
         {
+            const auto worldCollider1 = AABB(currentCollider1.bottomLeft + position1, currentCollider1.topRight + position1);
             for (const auto& currentCollider2 : colliders2)
             {
-                if ((currentCollider1.bottomLeft.x + position1.x <= currentCollider2.bottomLeft.x + position2.x  &&
-                     currentCollider2.bottomLeft.x + position2.x <= currentCollider1.topRight.x   + position1.x  ||
-                     currentCollider1.bottomLeft.x + position1.x <= currentCollider2.topRight.x   + position2.x  &&
-                     currentCollider2.topRight.x   + position2.x <= currentCollider1.topRight.x   + position1.x) &&
-                    (currentCollider1.bottomLeft.y + position1.y <= currentCollider2.bottomLeft.y + position2.y  &&
-                     currentCollider2.bottomLeft.y + position2.y <= currentCollider1.topRight.y   + position1.y  ||
-                     currentCollider1.bottomLeft.y + position1.y <= currentCollider2.topRight.y   + position2.y  &&
-                     currentCollider2.topRight.y   + position2.y <= currentCollider1.topRight.y   + position1.y))
-                    return true;
+                const auto worldCollider2 = AABB(currentCollider2.bottomLeft + position2, currentCollider2.topRight + position2);
+
+                if (worldCollider1.bottomLeft.x >= worldCollider2.topRight.x)
+                {
+                    return false;
+                }
+                if (worldCollider1.topRight.x <= worldCollider2.bottomLeft.x)
+                {
+                    return false;
+                }
+                if (worldCollider1.bottomLeft.y >= worldCollider2.topRight.y)
+                {
+                    return false;
+                }
+                if (worldCollider1.topRight.y <= worldCollider2.bottomLeft.y)
+                {
+                    return false;
+                }
             }
         }
 
-        return false;
+        return true;
     }
 }

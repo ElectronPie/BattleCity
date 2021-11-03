@@ -47,6 +47,8 @@ std::shared_ptr<IGameObject> createGameObjectFromDescription(const char descript
         return std::make_shared<Trees>(position, size, rotation, 1.f);
     case 'C':
         return std::make_shared<Ice>(position, size, rotation, -1.f);
+    case 'D':
+        return nullptr;
     case 'E':
         return std::make_shared<Eagle>(position, size, rotation, 0.f);
     case 'G':
@@ -59,7 +61,6 @@ std::shared_ptr<IGameObject> createGameObjectFromDescription(const char descript
         return std::make_shared<BrickWall>(BrickWall::EBrickWallType::TopRight, position, size, rotation, 0.f);
     default:
         std::cerr << "Unknown GameObject description: " << description << std::endl;
-    case 'D':
         return nullptr;
     }
 }
@@ -83,7 +84,7 @@ Level::Level(const std::vector<std::string>& levelDescription)
     m_enemyRespawn_2  = { (m_widthBlocks / 2 + 1) * BLOCK_SIZE, m_heightBlocks * BLOCK_SIZE + BLOCK_SIZE / 2 };
     m_enemyRespawn_3  = { (m_widthBlocks + 1) * BLOCK_SIZE,     m_heightBlocks * BLOCK_SIZE + BLOCK_SIZE / 2 };
 
-    m_mapObjects.reserve(static_cast<size_t>(m_widthBlocks * m_heightBlocks + 4));
+    m_levelObjects.reserve(static_cast<size_t>(m_widthBlocks * m_heightBlocks + 4));
     unsigned int currentBottomOffset = static_cast<unsigned int>(BLOCK_SIZE * m_heightBlocks - BLOCK_SIZE / 2);
     for (const std::string& currentRow : levelDescription)
     {
@@ -94,44 +95,44 @@ Level::Level(const std::vector<std::string>& levelDescription)
             {
             case 'K':
                 m_playerRespawn_1 = { currentLeftOffset, currentBottomOffset };
-                m_mapObjects.emplace_back(nullptr);
+                m_levelObjects.emplace_back(nullptr);
                 break;
             case 'L':
                 m_playerRespawn_2 = { currentLeftOffset, currentBottomOffset };
-                m_mapObjects.emplace_back(nullptr);
+                m_levelObjects.emplace_back(nullptr);
                 break;
             case 'M':
                 m_enemyRespawn_1 = { currentLeftOffset, currentBottomOffset };
-                m_mapObjects.emplace_back(nullptr);
+                m_levelObjects.emplace_back(nullptr);
                 break;
             case 'N':
                 m_enemyRespawn_2 = { currentLeftOffset, currentBottomOffset };
-                m_mapObjects.emplace_back(nullptr);
+                m_levelObjects.emplace_back(nullptr);
                 break;
             case 'O':
                 m_enemyRespawn_3 = { currentLeftOffset, currentBottomOffset };
-                m_mapObjects.emplace_back(nullptr);
+                m_levelObjects.emplace_back(nullptr);
                 break;
             default:
-                m_mapObjects.emplace_back(createGameObjectFromDescription(currentElement, glm::vec2(currentLeftOffset, currentBottomOffset), glm::vec2(BLOCK_SIZE), 0.f));
+                m_levelObjects.emplace_back(createGameObjectFromDescription(currentElement, glm::vec2(currentLeftOffset, currentBottomOffset), glm::vec2(BLOCK_SIZE), 0.f));
             }
             currentLeftOffset += BLOCK_SIZE;
         }
         currentBottomOffset -= BLOCK_SIZE;
     }
 
-    m_mapObjects.emplace_back(std::make_shared<Border>(glm::vec2(BLOCK_SIZE, 0.f), glm::vec2(m_widthBlocks * BLOCK_SIZE, BLOCK_SIZE / 2.f), 0.f, 0.f));
+    m_levelObjects.emplace_back(std::make_shared<Border>(glm::vec2(BLOCK_SIZE, 0.f), glm::vec2(m_widthBlocks * BLOCK_SIZE, BLOCK_SIZE / 2.f), 0.f, 0.f));
 
-    m_mapObjects.emplace_back(std::make_shared<Border>(glm::vec2(BLOCK_SIZE, (m_heightBlocks + 0.5) * BLOCK_SIZE), glm::vec2(m_widthBlocks * BLOCK_SIZE, BLOCK_SIZE / 2.f), 0.f, 0.f));
+    m_levelObjects.emplace_back(std::make_shared<Border>(glm::vec2(BLOCK_SIZE, (m_heightBlocks + 0.5) * BLOCK_SIZE), glm::vec2(m_widthBlocks * BLOCK_SIZE, BLOCK_SIZE / 2.f), 0.f, 0.f));
 
-    m_mapObjects.emplace_back(std::make_shared<Border>(glm::vec2(0.f, 0.f), glm::vec2(BLOCK_SIZE, (m_heightBlocks + 1) * BLOCK_SIZE), 0.f, 0.f));
+    m_levelObjects.emplace_back(std::make_shared<Border>(glm::vec2(0.f, 0.f), glm::vec2(BLOCK_SIZE, (m_heightBlocks + 1) * BLOCK_SIZE), 0.f, 0.f));
 
-    m_mapObjects.emplace_back(std::make_shared<Border>(glm::vec2((m_widthBlocks + 1) * BLOCK_SIZE, 0.f), glm::vec2(BLOCK_SIZE * 2, (m_heightBlocks + 1) * BLOCK_SIZE), 0.f, 0.f));
+    m_levelObjects.emplace_back(std::make_shared<Border>(glm::vec2((m_widthBlocks + 1) * BLOCK_SIZE, 0.f), glm::vec2(BLOCK_SIZE * 2, (m_heightBlocks + 1) * BLOCK_SIZE), 0.f, 0.f));
 }
 
 void Level::render() const
 {
-    for (const auto& currentMapObject : m_mapObjects)
+    for (const auto& currentMapObject : m_levelObjects)
     {
         if (currentMapObject)
         {
@@ -142,7 +143,7 @@ void Level::render() const
 
 void Level::update(const double delta)
 {
-    for (const auto& currentMapObject : m_mapObjects)
+    for (const auto& currentMapObject : m_levelObjects)
     {
         if (currentMapObject)
         {
@@ -177,21 +178,31 @@ std::vector<std::shared_ptr<IGameObject>> Level::getObjectsInArea(const glm::vec
     size_t startY = static_cast<size_t>(floor(topRight_converted.y  / BLOCK_SIZE));
     size_t endY   = static_cast<size_t>(ceil(bottomLeft_converted.y / BLOCK_SIZE));
 
-    //std::cout << "bottomLeft_converted.x: " << bottomLeft_converted.x << ", bottomLeft_converted.y: " << bottomLeft_converted.y << std::endl;
-    //std::cout << "topRight_converted.x: " << topRight_converted.x << ", topRight_converted.y: " << topRight_converted.y << std::endl;
-    //std::cout << "startX: " << startX << ", endX: " << endX << std::endl;
-    //std::cout << "startY: " << startY << ", endY: " << endY << std::endl;
-
     for (size_t currentColumn = startX; currentColumn < endX; ++currentColumn)
     {
         for (size_t currentRow = startY; currentRow < endY; ++currentRow)
         {
-            auto& currentObject = m_mapObjects[currentRow * m_widthBlocks + currentColumn];
+            auto& currentObject = m_levelObjects[currentRow * m_widthBlocks + currentColumn];
             if (currentObject) output.emplace_back(currentObject);
         }
     }
 
-    //std::cout << "output.size(): " << output.size() << std::endl;
+    if (endX >= m_widthBlocks)
+    {
+        output.emplace_back(m_levelObjects[m_levelObjects.size() - 1]);
+    }
+    if (startX <= 1)
+    {
+        output.emplace_back(m_levelObjects[m_levelObjects.size() - 2]);
+    }
+    if (startY <= 1)
+    {
+        output.emplace_back(m_levelObjects[m_levelObjects.size() - 3]);
+    }
+    if (endY >= m_heightBlocks)
+    {
+        output.emplace_back(m_levelObjects[m_levelObjects.size() - 4]);
+    }
 
     return output;
 }
