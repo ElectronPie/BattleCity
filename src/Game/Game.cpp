@@ -77,6 +77,11 @@ void Game::update(const double delta)
         m_pTank->setVelocity(0.);
     }
 
+    if (m_keys[GLFW_KEY_SPACE])
+    {
+        m_pTank->fire();
+    }
+
     m_pTank->update(delta);
 }
 

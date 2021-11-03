@@ -59,7 +59,7 @@ namespace RenderEngine
         if(!success)
         {
             GLchar infoLog[1024];
-            glGetShaderInfoLog(shaderID, sizeof(infoLog), nullptr, infoLog);
+            glGetProgramInfoLog(shaderID, sizeof(infoLog), nullptr, infoLog);
             std::cerr << "ERROR::SHADER: Compile-time error:\n" << infoLog << std::endl;
             return false;
         }

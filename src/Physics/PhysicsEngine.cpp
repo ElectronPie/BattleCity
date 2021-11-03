@@ -104,9 +104,9 @@ namespace Physics
                 {
                     return false;
                 }
+
+                return true;
             }
         }
-
-        return true;
     }
 }
