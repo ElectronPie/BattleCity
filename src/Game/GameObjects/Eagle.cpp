@@ -7,7 +7,7 @@ Eagle::Eagle(const glm::vec2& position,
              const glm::vec2& size,
              const float rotation,
              const float layer)
-: IGameObject(position, size, rotation, layer)
+: IGameObject(EObjectType::Eagle, position, size, rotation, layer)
 , m_isAlive(true)
 , m_sprites{ ResourceManager::getSprite("eagle_dead"),
              ResourceManager::getSprite("eagle") }

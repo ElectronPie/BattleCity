@@ -8,7 +8,7 @@ BetonWall::BetonWall(const EBetonWallType eBetonWallType,
                      const glm::vec2& size,
                      const float rotation,
                      const float layer)
-: IGameObject(position, size, rotation, layer)
+: IGameObject(EObjectType::BetonWall, position, size, rotation, layer)
 , m_currentBlockState{ false,
                        false,
                        false,

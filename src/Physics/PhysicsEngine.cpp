@@ -45,22 +45,12 @@ namespace Physics
                 for (const auto& currentObjectToCheck : objectsToCheck)
                 {
                     const auto& collidersToCheck = currentObjectToCheck->getColliders();
-                    if (!collidersToCheck.empty())
+                    if (currentObjectToCheck->collides(currentObject->getObjectType()) && !collidersToCheck.empty())
                     {
                         if (hasIntersection(colliders, newPosition, collidersToCheck, currentObjectToCheck->getCurrentPosition()))
                         {
                             hasCollision = true;
-                        }
-                        else
-                        {
-                            if (currentObject->getCurrentDirection().x != 0.f)
-                            {
-                                currentObject->getCurrentPosition().y = static_cast<unsigned int>(currentObject->getCurrentPosition().y / 8.f + 0.5f) * 8.f;
-                            }
-                            if (currentObject->getCurrentDirection().y != 0.f)
-                            {
-                                currentObject->getCurrentPosition().x = static_cast<unsigned int>(currentObject->getCurrentPosition().x / 8.f + 0.5f) * 8.f;
-                            }
+                            currentObjectToCheck->onCollision();
                         }
                     }
                 }
@@ -68,6 +58,18 @@ namespace Physics
                 if (!hasCollision)
                 {
                     currentObject->getCurrentPosition() = newPosition;
+                }
+                else
+                {
+                    if (currentObject->getCurrentDirection().x != 0.f)
+                    {
+                        currentObject->getCurrentPosition().y = static_cast<unsigned int>(currentObject->getCurrentPosition().y / 8.f + 0.5f) * 8.f;
+                    }
+                    if (currentObject->getCurrentDirection().y != 0.f)
+                    {
+                        currentObject->getCurrentPosition().x = static_cast<unsigned int>(currentObject->getCurrentPosition().x / 8.f + 0.5f) * 8.f;
+                    }
+                    currentObject->onCollision();
                 }
             }
         }
@@ -108,5 +110,6 @@ namespace Physics
                 return true;
             }
         }
+        return false;
     }
 }
