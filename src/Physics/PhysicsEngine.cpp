@@ -61,14 +61,6 @@ namespace Physics
                 }
                 else
                 {
-                    if (currentObject->getCurrentDirection().x != 0.f)
-                    {
-                        currentObject->getCurrentPosition().y = static_cast<unsigned int>(currentObject->getCurrentPosition().y / 8.f + 0.5f) * 8.f;
-                    }
-                    if (currentObject->getCurrentDirection().y != 0.f)
-                    {
-                        currentObject->getCurrentPosition().x = static_cast<unsigned int>(currentObject->getCurrentPosition().x / 8.f + 0.5f) * 8.f;
-                    }
                     currentObject->onCollision();
                 }
             }

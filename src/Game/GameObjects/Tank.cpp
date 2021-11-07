@@ -163,6 +163,6 @@ void Tank::fire()
 {
      if (!m_isSpawning && !m_pCurrentBullet->isActive())
      {
-          m_pCurrentBullet->fire(m_position + m_size / 4.f + m_size * m_direction, m_direction);
+          m_pCurrentBullet->fire(m_position + m_size / 4.f + m_size / 2.f * m_direction, m_direction);
      }
 }
