@@ -102,7 +102,7 @@ bool Game::init()
         std::cerr << "Can't find texture atlas: " << "tanksTextureAtlas" << std::endl;
     }
 
-    m_pLevel = std::make_shared<Level>(ResourceManager::getLevels()[1]);
+    m_pLevel = std::make_shared<Level>(ResourceManager::getLevels()[0]);
     m_windowSize.x = static_cast<int>(m_pLevel->getLevelWidth());
     m_windowSize.y = static_cast<int>(m_pLevel->getLevelHeight());
     Physics::PhysicsEngine::setCurrentLevel(m_pLevel);
