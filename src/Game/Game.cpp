@@ -11,7 +11,8 @@
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "Level.h"
+#include "GameStates/StartScreen.h"
+#include "GameStates/Level.h"
 #include "GameObjects/Tank.h"
 
 #include "../Physics/PhysicsEngine.h"
@@ -22,7 +23,7 @@
 #include "../Resources/ResourceManager.h"
 
 Game::Game(const glm::vec2 &windowSize)
-: m_eCurrentGameState(EGameState::Active)
+: m_eCurrentGameState(EGameState::StartScreen)
 , m_windowSize(windowSize)
 {
     m_keys.fill(false);
@@ -37,52 +38,70 @@ Game::~Game()
 
 void Game::render()
 {
-    if(m_pTank)
+    switch (m_eCurrentGameState)
     {
-        m_pTank->render();
-    }
-
-    if(m_pLevel)
-    {
-        m_pLevel->render();
+    case EGameState::StartScreen:
+        if (m_pStartScreen)
+        {
+            m_pStartScreen->render();
+        }
+        break;
+    case EGameState::Level:
+        if (m_pTank)
+        {
+            m_pTank->render();
+        }
+        if (m_pLevel)
+        {
+            m_pLevel->render();
+        }
+        break;
     }
 }
 
 void Game::update(const double delta)
 {
-    m_pLevel->update(delta);
-
-    if(m_keys[GLFW_KEY_W])
+    switch (m_eCurrentGameState)
     {
-        m_pTank->setOrientation(Tank::EOrientation::Top);
-        m_pTank->setVelocity(m_pTank->getMaxVelocity());
+    case EGameState::StartScreen:
+        if (m_keys[GLFW_KEY_ENTER])
+        {
+            m_eCurrentGameState = EGameState::Level;
+        }
+        break;
+    case EGameState::Level:
+        m_pLevel->update(delta);
+        if( m_keys[GLFW_KEY_W])
+        {
+            m_pTank->setOrientation(Tank::EOrientation::Top);
+            m_pTank->setVelocity(m_pTank->getMaxVelocity());
+        }
+        else if( m_keys[GLFW_KEY_A])
+        {
+            m_pTank->setOrientation(Tank::EOrientation::Left);
+            m_pTank->setVelocity(m_pTank->getMaxVelocity());
+        }
+        else if( m_keys[GLFW_KEY_S])
+        {
+            m_pTank->setOrientation(Tank::EOrientation::Bottom);
+            m_pTank->setVelocity(m_pTank->getMaxVelocity());
+        }
+        else if( m_keys[GLFW_KEY_D])
+        {
+            m_pTank->setOrientation(Tank::EOrientation::Right);
+            m_pTank->setVelocity(m_pTank->getMaxVelocity());
+        }
+        else
+        {
+            m_pTank->setVelocity(0.);
+        }
+        if (m_keys[GLFW_KEY_SPACE])
+        {
+            m_pTank->fire();
+        }
+        m_pTank->update(delta);
+        break;
     }
-    else if(m_keys[GLFW_KEY_A])
-    {
-        m_pTank->setOrientation(Tank::EOrientation::Left);
-        m_pTank->setVelocity(m_pTank->getMaxVelocity());
-    }
-    else if(m_keys[GLFW_KEY_S])
-    {
-        m_pTank->setOrientation(Tank::EOrientation::Bottom);
-        m_pTank->setVelocity(m_pTank->getMaxVelocity());
-    }
-    else if(m_keys[GLFW_KEY_D])
-    {
-        m_pTank->setOrientation(Tank::EOrientation::Right);
-        m_pTank->setVelocity(m_pTank->getMaxVelocity());
-    }
-    else
-    {
-        m_pTank->setVelocity(0.);
-    }
-
-    if (m_keys[GLFW_KEY_SPACE])
-    {
-        m_pTank->fire();
-    }
-
-    m_pTank->update(delta);
 }
 
 bool Game::init()
@@ -96,15 +115,12 @@ bool Game::init()
         return false;
     }
 
-    auto pTanksTextureAtlas = ResourceManager::getTexture("tanksTextureAtlas");
-    if (!pTanksTextureAtlas)
-    {
-        std::cerr << "Can't find texture atlas: " << "tanksTextureAtlas" << std::endl;
-    }
+    m_pStartScreen = std::make_shared<StartScreen>(ResourceManager::getStartScreen());
 
     m_pLevel = std::make_shared<Level>(ResourceManager::getLevels()[0]);
-    m_windowSize.x = static_cast<int>(m_pLevel->getLevelWidth());
-    m_windowSize.y = static_cast<int>(m_pLevel->getLevelHeight());
+    m_windowSize.x = static_cast<int>(m_pLevel->getStateWidth());
+    m_windowSize.y = static_cast<int>(m_pLevel->getStateHeight());
+
     Physics::PhysicsEngine::setCurrentLevel(m_pLevel);
 
     glm::mat4 projectionMatrix = glm::ortho<float>(0.f, m_windowSize.x, 0.f, m_windowSize.y, -100.f, 100.f);
@@ -127,12 +143,27 @@ void Game::setKey(const int key, const int action)
     m_keys[key] = action;
 }
 
-size_t Game::getCurrentLevelWidth() const
+size_t Game::getCurrentWidth() const
 {
-    return m_pLevel->getLevelWidth();
+    switch (m_eCurrentGameState)
+    {
+    case EGameState::StartScreen:
+        return m_pStartScreen->getStateWidth();
+    case EGameState::Level:
+        return m_pLevel->getStateWidth();
+        break;
+    }
+    return 0;
 }
 
-size_t Game::getCurrentLevelHeight() const
+size_t Game::getCurrentHeight() const
 {
-    return m_pLevel->getLevelHeight();
+    switch (m_eCurrentGameState)
+    {
+    case EGameState::StartScreen:
+        return m_pStartScreen->getStateHeight();
+    case EGameState::Level:
+        return m_pLevel->getStateHeight();
+    }
+    return 0;
 }

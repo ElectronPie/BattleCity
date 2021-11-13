@@ -4,8 +4,9 @@
 #include <array>
 #include <memory>
 
-class Level;
 class Tank;
+class Level;
+class StartScreen;
 
 class Game
 {
@@ -17,19 +18,24 @@ public:
     void update(const double delta);
     void setKey(const int key, const int action);
     bool init();
-    size_t getCurrentLevelWidth() const;
-    size_t getCurrentLevelHeight() const;
+    size_t getCurrentWidth() const;
+    size_t getCurrentHeight() const;
 
 private:
-    std::array<bool, 349> m_keys;
-
-    enum EGameState {
-        Active,
-        Pause
+    enum class EGameState {
+        StartScreen,
+        LevelStart,
+        Level,
+        Pause,
+        Scores,
+        GameOver
     };
+
+    std::array<bool, 349> m_keys;
 
     glm::vec2 m_windowSize;
     EGameState m_eCurrentGameState;
     std::shared_ptr<Tank> m_pTank;
     std::shared_ptr<Level> m_pLevel;
+    std::shared_ptr<StartScreen> m_pStartScreen;
 };

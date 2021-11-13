@@ -1,5 +1,7 @@
 #pragma once
 
+#include "IGameState.h"
+
 #include <string>
 #include <vector>
 #include <memory>
@@ -8,7 +10,7 @@
 
 class IGameObject;
 
-class Level
+class Level : public IGameState
 {
 public:
     static constexpr unsigned int BLOCK_SIZE = 16;
@@ -16,8 +18,8 @@ public:
     Level(const std::vector<std::string>& levelDescription);
     void render() const;
     void update(const double delta);
-    size_t getLevelWidth() const;
-    size_t getLevelHeight() const;
+    virtual unsigned int getStateWidth() const override;
+    virtual unsigned int getStateHeight() const override;
 
     const glm::ivec2& getPlayerRespawn_1() const { return m_playerRespawn_1; }
     const glm::ivec2& getPlayerRespawn_2() const { return m_playerRespawn_2; }
