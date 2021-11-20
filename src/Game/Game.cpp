@@ -82,6 +82,10 @@ void Game::render()
 
 void Game::update(const double delta)
 {
+    m_pCurrentGameState->processInput(m_keys);
+    m_pCurrentGameState->update(delta);
+
+    /*
     switch (m_eCurrentGameState)
     {
     case EGameState::StartScreen:
@@ -92,10 +96,9 @@ void Game::update(const double delta)
         }
         break;
     case EGameState::Level:
-        m_pCurrentGameState->processInput(m_keys);
-        m_pCurrentGameState->update(delta);
         break;
     }
+    */
 }
 
 bool Game::init()
@@ -112,7 +115,7 @@ bool Game::init()
     m_pSpriteShaderProgram->use();
     m_pSpriteShaderProgram->setInt("tex", 0);
 
-    m_pCurrentGameState = std::make_shared<StartScreen>(ResourceManager::getStartScreen());
+    m_pCurrentGameState = std::make_shared<StartScreen>(ResourceManager::getStartScreen(), this);
     setWindowSize(m_windowSize);
     return true;
 }
